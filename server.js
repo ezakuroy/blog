@@ -27,16 +27,34 @@ app.get('/posts', function(req, res) {
 	})
 });
 
+app.get('/posts/:postTitle', function(req, res) {
+	
+        var cursor = db.collection('posts').find({"urlTitle" : req.param("postTitle")}).toArray((err, result) =>{
+                if(err) return console.log(err)
+
+                //res.render('index.ejs', {posts: result})
+		console.log(result);
+                res.setHeader('Content-Type', 'application/json');
+                res.send(result);
+        })
+
+});
+
 app.get('/admin', function(req, res) {
 	res.sendFile(__dirname + '/admin.html')
 
 });
 
 app.post('/blogpost', (req, res) => {
+console.log('Post published: ' + req.body);
+	console.log(req.body);
+
+	req.body.createdDate = Date().toLocaleString();
 	db.collection('posts').save(req.body, (err, result) => {
 		if (err) return console.log(err)
 
 		console.log('saved to database')
-		res.redirect('/')
+		res.redirect('/posts')
 	})
+
 })

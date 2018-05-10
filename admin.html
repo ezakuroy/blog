@@ -3,12 +3,46 @@
 <head>
   <meta charset="UTF-8">
   <title>Admin</title>
+
+<!-- include libraries(jQuery, bootstrap) -->
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script> 
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/css/bootstrap.min.css" />
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<!-- include summernote css/js -->
+<link href="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.css" rel="stylesheet">
+<script src="http://cdnjs.cloudflare.com/ajax/libs/summernote/0.8.9/summernote.js"></script> 
+
 </head>
 	<body>
 		<form action="/blogpost" method="POST">
-		  <input type="text" placeholder="subject" name="subject"/>
-		  <textarea rows="10" cols="30" placeholder="body" name="body"></textarea>
+		  <input type="text" placeholder="subject" name="subject" id="subject"/>
+		  <input type="text" placeholder="urlTitle" name="urlTitle" id="urlTitle"/>
+		  <textarea placeholder="body" name="body" id="summernote"></textarea>
 		  <button type="submit">Submit</button>
 		</form>
+
+		<script>
+		$(document).ready(function() {
+			  $('#summernote').summernote();
+		});
+	
+		$('#subject').change(function() {
+			$("#urlTitle").val(toSeoUrl($("#subject").val()));		
+		});
+
+function toSeoUrl(url) {
+    return url.toString()               // Convert to string
+        .normalize('NFD')               // Change diacritics
+        .replace(/[\u0300-\u036f]/g,'') // Remove illegal characters
+        .replace(/\s+/g,'-')            // Change whitespace to dashes
+        .toLowerCase()                  // Change to lowercase
+        .replace(/&/g,'-and-')          // Replace ampersand
+        .replace(/[^a-z0-9\-]/g,'')     // Remove anything that is not a letter, number or dash
+        .replace(/-+/g,'-')             // Remove duplicate dashes
+        .replace(/^-*/,'')              // Remove starting dashes
+        .replace(/-*$/,'');             // Remove trailing dashes
+}
+		</script>
 	</body>
 </html>
