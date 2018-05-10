@@ -9,17 +9,21 @@ app.set('view engine', 'ejs')
 MongoClient.connect('mongodb://ezakuroy:Yamin7374!!!@ds119350.mlab.com:19350/ezaku', (err, client) => {
 	if (err) return console.log(err)
 	db = client.db('ezaku')
-	app.listen(3000, function() {
-		console.log('listening on 3000');
+	app.listen(3001, function() {
+		console.log('listening on 3001');
 	});
 })
 
-app.get('/', function(req, res) {
+app.get('/posts', function(req, res) {
 //	res.sendFile(__dirname + '/index.html')
 	var cursor = db.collection('posts').find().toArray((err, result) =>{
 		if(err) return console.log(err)
 
-		res.render('index.ejs', {posts: result})
+		//res.render('index.ejs', {posts: result})
+		console.log('hit');	
+
+		res.setHeader('Content-Type', 'application/json');
+		res.send(result);
 	})
 });
 
